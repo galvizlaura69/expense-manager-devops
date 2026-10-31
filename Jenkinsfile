@@ -36,15 +36,15 @@ pipeline {
                 sh 'docker compose -p expense-manager-devops run --rm web python manage.py test'
             }
         }
-       stage('Deploy') {
+
+        stage('Deploy') {
             steps {
                 echo 'Iniciando despliegue de Expense Manager...'
- 
-                sh '''
-                 docker-compose up -d --no-build web
-                '''
-               echo 'Despliegue finalizado.'
-    }
-}
+
+                sh 'docker compose -p expense-manager-devops up -d --no-build web'
+
+                echo 'Despliegue finalizado.'
+            }
+        }
     }
 }
