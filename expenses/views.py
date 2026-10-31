@@ -9,6 +9,10 @@ from .models import Category
 from .forms import CategoryForm
 
 
+from decimal import Decimal
+from django.db.models import Sum
+
+
 @login_required
 def category_list(request):
 
@@ -198,4 +202,33 @@ def transaction_delete(request, pk):
         request,
         'expenses/transaction_confirm_delete.html',
         {'transaction': transaction}
+    )
+
+
+
+@login_required
+def dashboard(request):
+
+    transactions = Transaction.objects.filter(
+        user=request.user
+    )
+
+    income = transactions.filter(
+        category__type='INCOME'
+    ).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+
+    expenses = transactions.filter(
+        category__type='EXPENSE'
+    ).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+
+    balance = income - expenses
+
+    return render(
+        request,
+        'expenses/dashboard.html',
+        {
+            'income': income,
+            'expenses': expenses,
+            'balance': balance
+        }
     )
