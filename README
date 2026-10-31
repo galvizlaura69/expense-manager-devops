@@ -1,116 +1,50 @@
-import pypandoc
+# Expense Manager - DevOps
 
-readme = r"""# Expense Manager — Control de gastos
+Aplicación web para la gestión de ingresos y gastos personales, desarrollada con Django y Python. El proyecto implementa operaciones CRUD para administrar categorías y movimientos financieros, permitiendo consultar un resumen del estado financiero del usuario.
 
-Aplicación web para administrar ingresos y gastos personales. Permite organizar movimientos mediante categorías, consultar transacciones y visualizar un resumen financiero con el total de ingresos, gastos y balance disponible.
+También integra herramientas DevOps como Docker, Docker Compose, Jenkins y GitFlow para automatizar la construcción, validación, pruebas y despliegue de la aplicación.
 
-El proyecto se desarrolla como práctica académica de **DevOps**, integrando Python, Django, SQLite, Docker, Jenkins, GitHub y GitFlow.
+## 1. Tecnologías utilizadas
 
-## Tabla de contenido
-
-- [Objetivos](#objetivos)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologías](#tecnologías)
-- [Arquitectura](#arquitectura)
-- [Modelo de datos](#modelo-de-datos)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Requisitos](#requisitos)
-- [Ejecución local](#ejecución-local)
-- [Ejecución con Docker](#ejecución-con-docker)
-- [Pruebas](#pruebas)
-- [Pipeline de Jenkins](#pipeline-de-jenkins)
-- [Flujo GitFlow](#flujo-gitflow)
-- [Variables de entorno](#variables-de-entorno)
-- [Consideraciones](#consideraciones)
-
-## Objetivos
-
-- Desarrollar una aplicación web para registrar y consultar ingresos y gastos.
-- Separar la información de cada usuario autenticado.
-- Implementar operaciones CRUD para categorías y transacciones.
-- Calcular automáticamente ingresos, gastos y balance.
-- Empaquetar la aplicación mediante Docker.
-- Automatizar comprobaciones y pruebas con Jenkins.
-- Gestionar el código fuente mediante Git y GitHub.
-
-## Funcionalidades
-
-### Usuarios
-- Inicio y cierre de sesión.
-- Acceso a los datos asociados al usuario autenticado.
-
-### Categorías
-- Crear, consultar, editar y eliminar categorías.
-- Clasificar cada categoría como ingreso (`INCOME`) o gasto (`EXPENSE`).
-- Evitar eliminar categorías que tengan transacciones asociadas.
-
-### Transacciones
-- Crear, consultar, editar y eliminar movimientos.
-- Registrar descripción, importe, fecha y categoría.
-- Asociar cada movimiento al usuario autenticado.
-- Validar que el importe sea mayor que cero.
-
-### Dashboard
-- Consultar el total de ingresos.
-- Consultar el total de gastos.
-- Visualizar el balance:
-
-```text
-Balance = Total de ingresos - Total de gastos
-```
-
-## Tecnologías
-
-| Tecnología | Uso en el proyecto |
+| Tecnología | Uso |
 |---|---|
-| Python 3.12 | Lenguaje de programación. |
-| Django 5.2 | Framework web, autenticación, vistas, formularios y ORM. |
-| SQLite | Base de datos relacional basada en un archivo. |
-| Docker | Construcción y ejecución de contenedores. |
-| Docker Compose | Orquestación local de los servicios y volúmenes. |
-| Gunicorn | Servidor WSGI para ejecutar Django en el contenedor. |
-| WhiteNoise | Servicio de archivos estáticos de Django. |
-| Jenkins | Automatización del pipeline CI/CD. |
-| Git y GitHub | Control de versiones y alojamiento del repositorio. |
-| GitFlow | Organización del trabajo mediante ramas. |
+| Python 3.12 | Lenguaje de programación |
+| Django 5.2 | Framework web |
+| SQLite | Base de datos |
+| HTML y CSS | Interfaz de usuario |
+| Docker | Contenedorización |
+| Docker Compose | Administración de servicios |
+| Jenkins | Automatización del pipeline CI/CD |
+| Git y GitHub | Control de versiones |
+| GitFlow | Organización del desarrollo |
+| Gunicorn | Servidor de aplicación |
+| WhiteNoise | Gestión de archivos estáticos |
 
-## Arquitectura
+## 2. Funcionalidades
 
-La aplicación utiliza una arquitectura monolítica modular:
+- Registro e inicio de sesión de usuarios.
+- Gestión de categorías de ingresos y gastos.
+- Registro, consulta, actualización y eliminación de movimientos.
+- Visualización de ingresos totales.
+- Visualización de gastos totales.
+- Cálculo del balance disponible.
+- Separación de la información por usuario.
+- Panel administrativo de Django.
 
-1. El navegador envía solicitudes HTTP.
-2. Django recibe las solicitudes mediante sus rutas y vistas.
-3. Los formularios y modelos aplican validaciones y reglas del sistema.
-4. El ORM de Django consulta o modifica la base de datos SQLite.
-5. Django devuelve las plantillas HTML al navegador.
-6. Docker ejecuta la aplicación en un contenedor.
-7. Jenkins automatiza la descarga del código, construcción de la imagen y validaciones.
+## 3. Arquitectura del proyecto
 
-## Modelo de datos
-
-Las entidades principales del dominio son:
-
-| Entidad | Descripción |
-|---|---|
-| `User` | Modelo de usuarios incluido en Django. |
-| `Category` | Categoría de ingreso o gasto perteneciente a un usuario. |
-| `Transaction` | Movimiento financiero asociado a un usuario y una categoría. |
-
-Relaciones:
-
-- Un usuario puede tener muchas categorías.
-- Un usuario puede tener muchas transacciones.
-- Una categoría puede tener muchas transacciones.
-- Cada transacción pertenece a un usuario y a una categoría.
-
-Django también crea tablas internas para autenticación, permisos, sesiones y migraciones. Por eso, las tres entidades anteriores son las principales del negocio, no necesariamente las únicas tablas físicas de SQLite.
-
-## Estructura del proyecto
+El proyecto utiliza una arquitectura basada en Django, separando las responsabilidades de configuración, modelos, vistas, formularios y rutas.
 
 ```text
 expense-manager-devops/
-├── config/                 # Configuración principal de Django
-├── expenses/               # Modelos, vistas, formularios y pruebas
+│
+├── config/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── expenses/
 │   ├── migrations/
 │   ├── models.py
 │   ├── views.py
@@ -118,271 +52,210 @@ expense-manager-devops/
 │   ├── urls.py
 │   ├── admin.py
 │   └── tests.py
+│
 ├── templates/
-│   ├── expenses/           # Plantillas de la aplicación
-│   └── registration/       # Inicio de sesión
-├── static/                 # Archivos estáticos
-├── Dockerfile              # Imagen de la aplicación web
-├── Dockerfile.jenkins      # Imagen del servicio Jenkins
-├── docker-compose.yml      # Servicios y volúmenes
-├── Jenkinsfile             # Pipeline de automatización
-├── requirements.txt        # Dependencias de Python
+│   ├── expenses/
+│   └── registration/
+│
+├── static/
+│
+├── Dockerfile
+├── Dockerfile.jenkins
+├── docker-compose.yml
+├── Jenkinsfile
+├── requirements.txt
 ├── .dockerignore
 ├── .gitignore
 ├── manage.py
 └── README.md
 ```
 
-## Requisitos
+## 4. Modelo de datos
 
-Para ejecutar el proyecto localmente:
+### Category
 
-- Python 3.12.
+Almacena las categorías utilizadas para clasificar los movimientos.
+
+- `name`: nombre de la categoría.
+- `type`: tipo de categoría (INCOME o EXPENSE).
+- `user`: usuario propietario.
+- `created_at`: fecha de creación.
+
+### Transaction
+
+Almacena los movimientos financieros registrados por cada usuario.
+
+- `description`: descripción del movimiento.
+- `amount`: valor del movimiento.
+- `date`: fecha del movimiento.
+- `category`: categoría asociada.
+- `user`: usuario propietario.
+- `created_at`: fecha de creación.
+
+## 5. Requisitos previos
+
+Para ejecutar el proyecto localmente se necesita:
+
+- Python 3.12 o superior.
 - Git.
-- Un entorno virtual de Python.
-
-Para ejecutarlo con contenedores:
-
-- Docker Desktop en Windows o macOS, o Docker Engine en Linux.
+- Docker Desktop.
 - Docker Compose.
-- Docker en ejecución.
 
-## Ejecución local
+## 6. Ejecución local
 
-### 1. Clonar el repositorio
+Clonar el repositorio:
 
-Reemplaza la URL por la dirección real del repositorio:
-
-```powershell
-git clone <URL_DEL_REPOSITORIO>
+```bash
+git clone URL_DEL_REPOSITORIO
 cd expense-manager-devops
 ```
 
-### 2. Crear y activar el entorno virtual
+Crear y activar un entorno virtual:
 
-En Windows PowerShell:
+**Windows:**
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.venv\Scripts\activate
 ```
 
-En Linux o macOS:
+**Linux / macOS:**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Instalar dependencias
+Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Aplicar migraciones
+Ejecutar migraciones:
 
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Crear un usuario administrador
+Crear un usuario administrador:
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Validar y ejecutar
+Iniciar el servidor:
 
 ```bash
-python manage.py check
-python manage.py test
 python manage.py runserver
 ```
 
 Abrir en el navegador:
 
-- Aplicación: http://127.0.0.1:8000/
-- Administración: http://127.0.0.1:8000/admin/
-- Inicio de sesión: http://127.0.0.1:8000/accounts/login/
+http://127.0.0.1:8000
 
-## Ejecución con Docker
+## 7. Ejecución con Docker
 
-Asegúrate de que Docker Desktop o Docker Engine esté iniciado y ejecuta los comandos desde la carpeta raíz del proyecto.
+Construir y levantar los servicios:
 
-### 1. Construir la imagen
-
-```powershell
-docker compose build web
+```bash
+docker compose up -d --build
 ```
 
-Para reconstruir sin utilizar la caché:
+Consultar los contenedores:
 
-```powershell
-docker compose build --no-cache web
-```
-
-### 2. Iniciar la aplicación
-
-```powershell
-docker compose up -d web
-```
-
-### 3. Verificar los contenedores
-
-```powershell
+```bash
 docker compose ps
 ```
 
-### 4. Consultar los logs
+Consultar los registros:
 
-```powershell
+```bash
 docker compose logs -f web
 ```
 
-### 5. Crear un administrador dentro del contenedor
+Detener los servicios:
 
-```powershell
-docker compose exec web python manage.py createsuperuser
-```
-
-### 6. Abrir la aplicación
-
-http://localhost:8000/
-
-### 7. Detener la aplicación
-
-```powershell
+```bash
 docker compose down
 ```
 
-**Persistencia de datos:** la configuración utiliza un volumen Docker para conservar el archivo SQLite. No ejecutes `docker compose down -v` si deseas conservar los datos, porque esa opción elimina los volúmenes nombrados del proyecto.
+La aplicación estará disponible en:
 
-## Pruebas
+http://localhost:8000
 
-Las pruebas automatizadas se ejecutan con:
+La base de datos SQLite se almacena en un volumen Docker para conservar la información cuando se reinicia o reconstruye el contenedor.
+
+## 8. Jenkins y CI/CD
+
+El proyecto utiliza Jenkins para automatizar el proceso de integración y despliegue continuo.
+
+El pipeline definido en `Jenkinsfile` contempla las siguientes etapas:
+
+1. **Checkout:** obtiene el código fuente del repositorio.
+2. **Build Docker Image:** construye la imagen Docker de la aplicación.
+3. **Django Check:** verifica la configuración del proyecto Django.
+4. **Run Tests:** ejecuta las pruebas automatizadas.
+5. **Deploy:** despliega la aplicación cuando se trabaja sobre la rama `main`.
+
+El pipeline también utiliza `pollSCM` para revisar periódicamente si existen cambios en el repositorio.
+
+### Acceso a Jenkins
+
+http://localhost:8081
+
+## 9. Estrategia GitFlow
+
+Para organizar el desarrollo se utiliza GitFlow:
+
+| Rama | Responsabilidad |
+|---|---|
+| `main` | Código estable y listo para despliegue |
+| `develop` | Integración de funcionalidades |
+| `feature/*` | Desarrollo de nuevas funcionalidades |
+| `release/*` | Preparación de versiones |
+| `hotfix/*` | Corrección de errores urgentes |
+
+Flujo general:
+
+```text
+feature/* → develop → release/* → main
+```
+
+Los cambios se integran mediante Pull Requests para facilitar la revisión del código.
+
+## 10. Pruebas
+
+Se utilizan las herramientas de pruebas integradas de Django.
+
+Ejecutar las pruebas:
 
 ```bash
 python manage.py test
 ```
 
-También pueden ejecutarse dentro del servicio Docker:
-
-```powershell
-docker compose run --rm web python manage.py test
-```
-
-Las pruebas del proyecto deben validar, como mínimo:
-
-- Creación de categorías de ingreso y gasto.
-- Creación de transacciones.
-- Cálculo del balance del dashboard.
-- Aislamiento de la información entre usuarios.
-- Restricciones y validaciones de los formularios.
-
-## Pipeline de Jenkins
-
-El archivo `Jenkinsfile` define el proceso automatizado. El pipeline propuesto contiene las siguientes etapas:
-
-| Etapa | Descripción |
-|---|---|
-| Checkout SCM | Obtiene el código desde el repositorio configurado. |
-| Build Docker Image | Construye la imagen Docker de la aplicación. |
-| Django Check | Ejecuta `python manage.py check`. |
-| Run Tests | Ejecuta `python manage.py test`. |
-| Deploy | Levanta el servicio web cuando la ejecución corresponde a la rama `main`. |
-
-El pipeline necesita que el agente Jenkins tenga acceso al repositorio, Docker y la versión de Docker Compose utilizada por el `Jenkinsfile`.
-
-### Acceso local a Jenkins
-
-Con el servicio configurado en `docker-compose.yml`:
-
-```powershell
-docker compose up -d jenkins
-```
-
-La interfaz web se encuentra en:
-
-http://localhost:8081/
-
-Para consultar la contraseña inicial del contenedor de Jenkins:
-
-```powershell
-docker exec expense-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-```
-
-Después del primer acceso, se deben instalar los complementos necesarios y configurar el trabajo Pipeline o Multibranch Pipeline para utilizar el repositorio y su `Jenkinsfile`.
-
-> Nota: el montaje del socket Docker dentro de Jenkins y la ejecución con permisos elevados se utilizan únicamente como simplificación para el laboratorio local. No es una configuración recomendada para un entorno de producción.
-
-## Flujo GitFlow
-
-Se utiliza la siguiente organización:
-
-| Rama | Propósito |
-|---|---|
-| `main` | Código estable y versión desplegable. |
-| `develop` | Integración de funcionalidades. |
-| `feature/*` | Desarrollo de funcionalidades específicas. |
-| `release/*` | Preparación de una versión. |
-| `hotfix/*` | Corrección urgente sobre una versión estable. |
-
-Ejemplo de creación de una rama de funcionalidad:
+Verificar la configuración:
 
 ```bash
-git checkout develop
-git pull origin develop
-git checkout -b feature/nueva-funcionalidad
+python manage.py check
 ```
 
-Después de implementar y probar los cambios:
+Estas validaciones también se ejecutan automáticamente durante el pipeline de Jenkins.
 
-```bash
-git add .
-git commit -m "feat: describe the new functionality"
-git push -u origin feature/nueva-funcionalidad
-```
+## 11. Persistencia de datos
 
-Luego se crea un Pull Request desde la rama de funcionalidad hacia `develop`.
+La aplicación utiliza SQLite como sistema de almacenamiento.
 
-## Variables de entorno
+En el entorno Docker, la base de datos se guarda en un volumen persistente, evitando que los datos se pierdan al eliminar o recrear el contenedor de la aplicación.
 
-La configuración utiliza variables de entorno para adaptar la ejecución:
+## 12. Objetivo del proyecto
 
-| Variable | Propósito | Ejemplo local |
-|---|---|---|
-| `SECRET_KEY` | Clave secreta de Django. | Valor privado definido en el entorno. |
-| `DEBUG` | Activa o desactiva el modo depuración. | `True` en desarrollo; `False` en Docker. |
-| `ALLOWED_HOSTS` | Hosts permitidos por Django. | `localhost,127.0.0.1` |
-| `DB_PATH` | Ruta del archivo SQLite. | `/app/data/db.sqlite3` en Docker. |
+El objetivo es desarrollar una aplicación funcional para el control de gastos personales y aplicar conceptos de DevOps mediante la automatización de procesos de construcción, validación, pruebas y despliegue.
 
-No se deben publicar claves secretas, contraseñas ni archivos `.env` en GitHub. Los valores de ejemplo son exclusivamente para desarrollo local.
+El proyecto permite integrar el desarrollo de software con prácticas de control de versiones, contenedorización e integración continua.
 
-## Consideraciones
+## 13. Autoría
 
-- El proyecto utiliza SQLite por simplicidad y para facilitar su ejecución local.
-- Para escenarios de alta concurrencia o múltiples instancias se puede evaluar PostgreSQL.
-- La información de cada usuario debe permanecer aislada mediante filtros y validaciones en el backend.
-- La imagen Docker debe reconstruirse cuando cambien el código o las dependencias.
-- Jenkins debe ejecutar las pruebas antes de permitir la integración o el despliegue.
-- La configuración de Docker y Jenkins de este repositorio tiene fines académicos y debe revisarse antes de utilizarse en producción.
+Proyecto académico desarrollado como práctica de desarrollo de software y DevOps.
 
-## Autoría
-
-Proyecto académico: **Expense Manager — Control de gastos**.
-
-Tecnologías y documentación oficial:
-
-- [Documentación de Django](https://docs.djangoproject.com/)
-- [Documentación de Docker](https://docs.docker.com/)
-- [Documentación de Docker Compose](https://docs.docker.com/compose/)
-- [Documentación de Jenkins Pipeline](https://www.jenkins.io/doc/book/pipeline/)
-- [Documentación de SQLite](https://www.sqlite.org/docs.html)
-- [Documentación de Git](https://git-scm.com/doc)
-"""
-
-out = "/mnt/data/README_Expense_Manager.md"
-pypandoc.convert_text(readme, "md", format="md", outputfile=out, extra_args=["--standalone"])
-print(out)
+**Repositorio:** URL_DEL_REPOSITORIO
