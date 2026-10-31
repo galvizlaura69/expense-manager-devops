@@ -1,0 +1,20 @@
+<h1>Mis categorías</h1>
+
+<a href="{% url 'category_create' %}">Nueva categoría</a>
+
+{% for category in categories %}
+    <div>
+        <strong>{{ category.name }}</strong>
+        - {{ category.get_type_display }}
+
+        <a href="{% url 'category_update' category.pk %}">
+            Editar
+        </a>
+
+        <a href="{% url 'category_delete' category.pk %}">
+            Eliminar
+        </a>
+    </div>
+{% empty %}
+    <p>No tienes categorías registradas.</p>
+{% endfor %}
