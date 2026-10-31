@@ -1,0 +1,11 @@
+<h1>Registrar movimiento</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Guardar movimiento</button>
+</form>
+
+<a href="{% url 'transaction_list' %}">Volver</a>

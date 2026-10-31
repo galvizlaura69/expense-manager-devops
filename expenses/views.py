@@ -102,3 +102,100 @@ def category_delete(request, pk):
         'expenses/category_confirm_delete.html',
         {'category': category}
     )
+
+from django.db.models import Sum
+from .models import Transaction
+from .forms import TransactionForm
+
+
+@login_required
+def transaction_list(request):
+
+    transactions = Transaction.objects.filter(
+        user=request.user
+    ).select_related('category')
+
+    return render(
+        request,
+        'expenses/transaction_list.html',
+        {'transactions': transactions}
+    )
+
+
+@login_required
+def transaction_create(request):
+
+    form = TransactionForm(
+        request.POST or None,
+        user=request.user
+    )
+
+    if request.method == 'POST' and form.is_valid():
+
+        transaction = form.save(commit=False)
+        transaction.user = request.user
+        transaction.save()
+
+        messages.success(request, 'Movimiento registrado.')
+
+        return redirect('transaction_list')
+
+    return render(
+        request,
+        'expenses/transaction_form.html',
+        {'form': form}
+    )
+
+
+@login_required
+def transaction_update(request, pk):
+
+    transaction = get_object_or_404(
+        Transaction,
+        pk=pk,
+        user=request.user
+    )
+
+    form = TransactionForm(
+        request.POST or None,
+        instance=transaction,
+        user=request.user
+    )
+
+    if request.method == 'POST' and form.is_valid():
+
+        form.save()
+
+        messages.success(request, 'Movimiento actualizado.')
+
+        return redirect('transaction_list')
+
+    return render(
+        request,
+        'expenses/transaction_form.html',
+        {'form': form}
+    )
+
+
+@login_required
+def transaction_delete(request, pk):
+
+    transaction = get_object_or_404(
+        Transaction,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+
+        transaction.delete()
+
+        messages.success(request, 'Movimiento eliminado.')
+
+        return redirect('transaction_list')
+
+    return render(
+        request,
+        'expenses/transaction_confirm_delete.html',
+        {'transaction': transaction}
+    )

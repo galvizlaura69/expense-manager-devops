@@ -1,0 +1,13 @@
+<h1>Eliminar movimiento</h1>
+
+<p>
+    ¿Deseas eliminar {{ transaction.description }}?
+</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <button type="submit">Confirmar</button>
+</form>
+
+<a href="{% url 'transaction_list' %}">Cancelar</a>
