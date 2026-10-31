@@ -38,8 +38,16 @@ pipeline {
         }
 
         stage('Deploy') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main' ||
+                    env.GIT_BRANCH == 'origin/main' ||
+                    env.GIT_BRANCH == 'main'
+                }
+            }
+
             steps {
-                echo 'Iniciando despliegue de Expense Manager...'
+                echo 'Desplegando versión de producción desde main...'
 
                 sh 'docker compose -p expense-manager-devops up -d --no-build web'
 
