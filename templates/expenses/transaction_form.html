@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Registrar movimiento | Expense Manager{% endblock %}
+{% block title %}
+  {% if form.instance.pk %}Editar movimiento | Expense Manager{% else %}Registrar movimiento | Expense Manager{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -10,10 +12,10 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
       </svg>
-      Nuevo movimiento
+      {% if form.instance.pk %}Editar movimiento{% else %}Nuevo movimiento{% endif %}
     </h1>
     <p class="page-subtitle">
-      Completa los datos de tu ingreso o gasto.
+      {% if form.instance.pk %}Modifica los datos de tu ingreso o gasto.{% else %}Completa los datos de tu ingreso o gasto.{% endif %}
     </p>
   </header>
 
@@ -51,63 +53,9 @@
 
       <div class="form-actions">
         <a href="{% url 'transaction_list' %}" class="btn btn-outline">Cancelar</a>
-        <button type="submit" class="btn btn-primary">Guardar movimiento</button>
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Guardar cambios{% else %}Guardar movimiento{% endif %}</button>
       </div>
     </form>
   </div>
 </div>
-
-<script>
-  // Utilidades para el campo Monto: formato visual al mostrar, valor limpio al enviar
-  (function() {
-    var moneyInput = document.querySelector('.money-input');
-
-    if (!moneyInput) return;
-
-    function toRawNumber(value) {
-      if (value === null || value === undefined || value === '') return '';
-      var cleaned = String(value).replace(/[^0-9.,]/g, '');
-      // Quitar puntos de miles, dejar coma decimal -> convertir a punto
-      cleaned = cleaned.replace(/\./g, '').replace(/,/g, '.');
-      return cleaned;
-    }
-
-    function formatMoneyDisplay(raw) {
-      if (raw === '') return '';
-      var num = parseFloat(raw);
-      if (isNaN(num)) return '';
-      // Parte entera con separador de miles (puntos), dos decimales con coma
-      var parts = num.toFixed(2).split('.');
-      var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      return intPart + ',' + parts[1];
-    }
-
-    // 1. Al cargar la página: si viene valor del servidor (editar), mostrar con formato visual
-    var initialRaw = toRawNumber(moneyInput.value);
-    if (initialRaw !== '') {
-      moneyInput.value = formatMoneyDisplay(initialRaw);
-    }
-
-    // 2. Al entrar al campo: mostrar valor limpio para editar
-    moneyInput.addEventListener('focus', function() {
-      moneyInput.value = toRawNumber(moneyInput.value);
-    });
-
-    // 3. Al salir del campo: mostrar con formato visual (ej: 8.000,00)
-    moneyInput.addEventListener('blur', function() {
-      var raw = toRawNumber(moneyInput.value);
-      if (raw !== '') {
-        moneyInput.value = formatMoneyDisplay(raw);
-      }
-    });
-
-    // 4. Al enviar el form: dejar solo el número limpio sin puntos de miles
-    var form = document.querySelector('form');
-    if (form) {
-      form.addEventListener('submit', function() {
-        moneyInput.value = toRawNumber(moneyInput.value);
-      });
-    }
-  })();
-</script>
 {% endblock %}

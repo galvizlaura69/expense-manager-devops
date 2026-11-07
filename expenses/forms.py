@@ -44,12 +44,12 @@ class TransactionForm(forms.ModelForm):
             'description': forms.TextInput(
                 attrs={'class': 'form-control'}
             ),
-            'amount': forms.TextInput(
+            'amount': forms.NumberInput(
                 attrs={
-                    'class': 'form-control money-input',
-                    'inputmode': 'decimal',
-                    'placeholder': '0.00',
-                    'autocomplete': 'off'
+                    'class': 'form-control',
+                    'step': '0.01',
+                    'min': '0.01',
+                    'placeholder': '0.00'
                 }
             ),
             'date': forms.DateInput(
@@ -70,6 +70,10 @@ class TransactionForm(forms.ModelForm):
         self.fields['category'].queryset = (
             Category.objects.filter(user=self.user)
         )
+
+        # Si estamos editando, asegurar que el monto se muestre como número limpio
+        if self.instance and self.instance.pk:
+            self.fields['amount'].initial = self.instance.amount
 
 
 class CustomUserCreationForm(UserCreationForm):
