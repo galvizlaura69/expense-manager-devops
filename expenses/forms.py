@@ -56,7 +56,8 @@ class TransactionForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'type': 'date'
-                }
+                },
+                format='%Y-%m-%d'
             ),
             'category': forms.Select(
                 attrs={'class': 'form-select'}
