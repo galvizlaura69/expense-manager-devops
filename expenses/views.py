@@ -2,11 +2,12 @@ from django.shortcuts import render
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models.deletion import ProtectedError
 
 from .models import Category
-from .forms import CategoryForm
+from .forms import CategoryForm, CustomUserCreationForm
 
 
 from decimal import Decimal
@@ -231,4 +232,31 @@ def dashboard(request):
             'expenses': expenses,
             'balance': balance
         }
+    )
+
+
+def signup(request):
+
+    if request.method == 'POST':
+
+        form = CustomUserCreationForm(request.POST)
+
+        if form.is_valid():
+
+            user = form.save()
+
+            login(request, user)
+
+            messages.success(request, 'Cuenta creada con éxito.')
+
+            return redirect('dashboard')
+
+    else:
+
+        form = CustomUserCreationForm()
+
+    return render(
+        request,
+        'registration/signup.html',
+        {'form': form}
     )
