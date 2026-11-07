@@ -48,7 +48,6 @@ class TransactionForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control money-input',
                     'inputmode': 'decimal',
-                    'pattern': '[0-9]*',
                     'placeholder': '0.00',
                     'autocomplete': 'off'
                 }

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Inicio | Expense Manager{% endblock %}
 
@@ -21,17 +22,17 @@
     <div class="stat-card">
       <span class="stat-icon">💵</span>
       <div class="stat-label">Ingresos totales</div>
-      <div class="stat-value income">${{ income }}</div>
+      <div class="stat-value income">${{ income|intcomma }}</div>
     </div>
     <div class="stat-card">
       <span class="stat-icon">💸</span>
       <div class="stat-label">Gastos totales</div>
-      <div class="stat-value expense">${{ expenses }}</div>
+      <div class="stat-value expense">${{ expenses|intcomma }}</div>
     </div>
     <div class="stat-card">
       <span class="stat-icon">🏦</span>
       <div class="stat-label">Balance disponible</div>
-      <div class="stat-value balance">${{ balance }}</div>
+      <div class="stat-value balance">${{ balance|intcomma }}</div>
     </div>
   </div>
 
