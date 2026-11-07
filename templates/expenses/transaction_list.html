@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Movimientos | Expense Manager{% endblock %}
 
@@ -51,7 +52,7 @@
             <td>
               <strong>{{ transaction.description }}</strong>
             </td>
-            <td>${{ transaction.amount }}</td>
+            <td>${{ transaction.amount|intcomma }}</td>
             <td>{{ transaction.category.name }}</td>
             <td>
               <span class="badge
@@ -59,7 +60,7 @@
                 {{ transaction.category.get_type_display }}
               </span>
             </td>
-            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.date|date:"d/m/Y" }}</td>
             <td>
               <div class="actions">
                 <a href="{% url 'transaction_update' transaction.pk %}"

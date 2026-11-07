@@ -58,61 +58,54 @@
 </div>
 
 <script>
-  // Formateo visual de monto con separador de miles
+  // Utilidades para el campo Monto: formato visual al mostrar, valor limpio al enviar
   (function() {
-    var moneyInputs = document.querySelectorAll('.money-input');
+    var moneyInput = document.querySelector('.money-input');
 
-    function formatMoney(value) {
-      if (value === '') return '';
-      // Solo dígitos
-      var digits = value.replace(/[^0-9]/g, '');
-      if (digits === '') return '';
-      var num = parseInt(digits, 10);
-      if (isNaN(num)) return '';
-      // Entero con separador de miles (puntos)
-      var intPart = num.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-      var decPart = '';
-      // Si había coma o punto decimal en el original, capturar decimales
-      var decimalMatch = value.match(/[.,](\d{1,2})$/);
-      if (decimalMatch) {
-        decPart = ',' + decimalMatch[1].padEnd(2, '0');
-      } else {
-        decPart = ',00';
-      }
-      return intPart + decPart;
-    }
+    if (!moneyInput) return;
 
-    function unformatMoney(value) {
-      if (value === '') return '';
-      // Quitar todo menos dígitos, punto y coma
-      var cleaned = value.replace(/[^0-9.,]/g, '');
-      // Reemplazar coma decimal por punto y quitar puntos de miles
+    function toRawNumber(value) {
+      if (value === null || value === undefined || value === '') return '';
+      var cleaned = String(value).replace(/[^0-9.,]/g, '');
+      // Quitar puntos de miles, dejar coma decimal -> convertir a punto
       cleaned = cleaned.replace(/\./g, '').replace(/,/g, '.');
       return cleaned;
     }
 
-    moneyInputs.forEach(function(input) {
-      // Al salir del campo, formatear visualmente
-      input.addEventListener('blur', function() {
-        var raw = unformatMoney(input.value);
-        if (raw !== '' && !isNaN(raw)) {
-          input.value = formatMoney(raw);
-        }
-      });
+    function formatMoneyDisplay(raw) {
+      if (raw === '') return '';
+      var num = parseFloat(raw);
+      if (isNaN(num)) return '';
+      // Parte entera con separador de miles (puntos), dos decimales con coma
+      var parts = num.toFixed(2).split('.');
+      var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return intPart + ',' + parts[1];
+    }
 
-      // Al entrar al campo, mostrar valor limpio para editar fácilmente
-      input.addEventListener('focus', function() {
-        input.value = unformatMoney(input.value).replace('.', ',');
-      });
+    // 1. Al cargar la página: si viene valor del servidor (editar), mostrar con formato visual
+    var initialRaw = toRawNumber(moneyInput.value);
+    if (initialRaw !== '') {
+      moneyInput.value = formatMoneyDisplay(initialRaw);
+    }
+
+    // 2. Al entrar al campo: mostrar valor limpio para editar
+    moneyInput.addEventListener('focus', function() {
+      moneyInput.value = toRawNumber(moneyInput.value);
     });
 
-    // Al enviar el form, dejar los valores limpios (sin puntos de miles)
+    // 3. Al salir del campo: mostrar con formato visual (ej: 8.000,00)
+    moneyInput.addEventListener('blur', function() {
+      var raw = toRawNumber(moneyInput.value);
+      if (raw !== '') {
+        moneyInput.value = formatMoneyDisplay(raw);
+      }
+    });
+
+    // 4. Al enviar el form: dejar solo el número limpio sin puntos de miles
     var form = document.querySelector('form');
     if (form) {
       form.addEventListener('submit', function() {
-        moneyInputs.forEach(function(input) {
-          input.value = unformatMoney(input.value);
-        });
+        moneyInput.value = toRawNumber(moneyInput.value);
       });
     }
   })();
