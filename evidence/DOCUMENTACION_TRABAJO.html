@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Manager - Documentación del Trabajo</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm 2cm 2cm 2cm;
+      @bottom-center {
+        content: "Página " counter(page) " de " counter(pages);
+        font-family: "Segoe UI", sans-serif;
+        font-size: 9pt;
+        color: #666;
+      }
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      box-sizing: border-box;
+    }
+
+    /* PORTADA */
+    .cover {
+      text-align: center;
+      padding-top: 100px;
+      box-sizing: border-box;
+      page-break-after: always;
+    }
+    .cover .logo {
+      font-size: 56px;
+      color: #10b981;
+      margin-bottom: 24px;
+    }
+    .cover h1 {
+      font-size: 42px;
+      color: #047857;
+      margin: 12px 0;
+    }
+    .cover h2 {
+      font-size: 22px;
+      color: #10b981;
+      margin: 6px 0;
+      font-weight: 400;
+    }
+    .cover .subtitle {
+      font-size: 17px;
+      color: #666;
+      margin-top: 48px;
+    }
+    .cover .info {
+      margin-top: 80px;
+      font-size: 14px;
+      color: #555;
+      text-align: left;
+      display: inline-block;
+    }
+    .cover .info table {
+      border-collapse: collapse;
+    }
+    .cover .info td {
+      padding: 10px 18px;
+      text-align: left;
+    }
+    .cover .info td:first-child {
+      font-weight: bold;
+      color: #047857;
+      width: 170px;
+    }
+
+    /* ÍNDICE */
+    .toc {
+      page-break-after: always;
+    }
+    .toc h1 {
+      color: #047857;
+      border-bottom: 3px solid #10b981;
+      padding-bottom: 12px;
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .toc li {
+      margin: 10px 0;
+      font-size: 15px;
+    }
+    .toc li::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    /* CONTENIDO GENERAL */
+    h1 {
+      color: #047857;
+      border-bottom: 2px solid #10b981;
+      padding-bottom: 10px;
+      font-size: 26px;
+      margin-top: 30px;
+    }
+    h2 {
+      color: #10b981;
+      font-size: 20px;
+      margin-top: 26px;
+    }
+    h3 {
+      color: #065f46;
+      font-size: 16px;
+    }
+    p {
+      margin: 10px 0;
+    }
+    ul {
+      margin: 10px 0 10px 22px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 11px;
+      text-align: left;
+    }
+    th {
+      background-color: #ecfdf5;
+      color: #047857;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    /* CALLOUTS */
+    .callout {
+      background: #f0fdf4;
+      border-left: 4px solid #10b981;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .callout.error {
+      background: #fef2f2;
+      border-left-color: #dc2626;
+    }
+
+    /* IMÁGENES CENTRADAS */
+    .evidence-img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      margin: 16px auto;
+      display: block;
+    }
+    .evidence-caption {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      margin-top: 6px;
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    /* GALERÍA DE EVIDENCIAS */
+    .evidence-section {
+      page-break-before: always;
+    }
+    .evidence-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .evidence-item {
+      width: calc(33.333% - 16px);
+      text-align: center;
+      box-sizing: border-box;
+    }
+    @media (max-width: 900px) {
+      .evidence-item {
+        width: 100%;
+      }
+    }
+    .evidence-item img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .evidence-item p {
+      font-size: 11px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+    .footer-note {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: 50px;
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- PORTADA -->
+    <div class="cover">
+      <div class="logo">💰</div>
+      <h1>Expense Manager</h1>
+      <h2>Gestión de Ingresos y Gastos Personales</h2>
+      <p class="subtitle">Documentación del Proyecto de Desarrollo de Software y DevOps</p>
+
+      <div class="info">
+        <table>
+          <tr><td>Curso</td><td>Desarrollo de Software / DevOps</td></tr>
+          <tr><td>Tecnología principal</td><td>Django 5.2 + Python 3.12</td></tr>
+          <tr><td>Base de datos</td><td>SQLite</td></tr>
+          <tr><td>Contenedorización</td><td>Docker y Docker Compose</td></tr>
+          <tr><td>CI/CD</td><td>Jenkins</td></tr>
+          <tr><td>Control de versiones</td><td>Git y GitHub (GitFlow)</td></tr>
+          <tr><td>Fecha</td><td>7 de noviembre de 2026</td></tr>
+          <tr><td>Estado</td><td>Versión final para entrega</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ÍNDICE -->
+    <div class="toc">
+      <h1>Índice de Contenidos</h1>
+      <ul>
+        <li>1. Introducción</li>
+        <li>2. Tecnologías Utilizadas</li>
+        <li>3. Arquitectura del Sistema</li>
+        <li>4. Modelo de Datos</li>
+        <li>5. Flujo de la Aplicación</li>
+        <li>6. Pipeline CI/CD con Jenkins</li>
+        <li>7. Diseño de Interfaz (UI/UX)</li>
+        <li>8. Registro de Usuarios y Autenticación</li>
+        <li>9. Evidencias del Proyecto</li>
+        <li>10. Conclusión</li>
+      </ul>
+    </div>
+
+    <!-- 1. INTRODUCCIÓN -->
+    <h1>1. Introducción</h1>
+    <p>
+      <b>Expense Manager</b> es una aplicación web desarrollada con <b>Django 5.2</b> y <b>Python 3.12</b>
+      diseñada para el control financiero personal. Permite a los usuarios autenticados administrar sus
+      ingresos y gastos mediante operaciones CRUD sobre categorías y movimientos financieros, con una
+      separación clara de la información por usuario.
+    </p>
+    <p>
+      El proyecto integra prácticas de <b>DevOps</b>: contenedorización con Docker, orquestación con
+      Docker Compose, integración y despliegue continuo con Jenkins, y organización del código bajo
+      la estrategia GitFlow.
+    </p>
+
+    <!-- 2. TECNOLOGÍAS -->
+    <h1>2. Tecnologías Utilizadas</h1>
+    <table>
+      <thead>
+        <tr><th>Tecnología</th><th>Uso</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Python 3.12</td><td>Lenguaje de programación</td></tr>
+        <tr><td>Django 5.2</td><td>Framework web</td></tr>
+        <tr><td>SQLite</td><td>Base de datos</td></tr>
+        <tr><td>HTML y CSS</td><td>Interfaz de usuario</td></tr>
+        <tr><td>Docker</td><td>Contenedorización</td></tr>
+        <tr><td>Docker Compose</td><td>Orquestación de servicios</td></tr>
+        <tr><td>Jenkins</td><td>Pipeline CI/CD</td></tr>
+        <tr><td>Git y GitHub</td><td>Control de versiones</td></tr>
+        <tr><td>GitFlow</td><td>Estrategia de ramas</td></tr>
+        <tr><td>Gunicorn</td><td>Servidor de aplicación</td></tr>
+        <tr><td>WhiteNoise</td><td>Archivos estáticos</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 3. ARQUITECTURA -->
+    <h1>3. Arquitectura del Sistema</h1>
+    <p>El proyecto sigue una arquitectura basada en Django, separando responsabilidades en capas:</p>
+    <table>
+      <thead>
+        <tr><th>Capa</th><th>Archivos</th><th>Responsabilidad</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Configuración</td><td><code>config/settings.py</code>, <code>config/urls.py</code></td><td>Ajustes del proyecto, rutas URLs y middlewares</td></tr>
+        <tr><td>Modelos</td><td><code>expenses/models.py</code></td><td>Estructura de datos (Category, Transaction)</td></tr>
+        <tr><td>Vistas</td><td><code>expenses/views.py</code></td><td>Lógica de presentación y control de flujo</td></tr>
+        <tr><td>Formularios</td><td><code>expenses/forms.py</code></td><td>Validación y captura de datos de usuario</td></tr>
+        <tr><td>Plantillas</td><td><code>templates/</code></td><td>Interfaz HTML con herencia de <code>base.html</code></td></tr>
+        <tr><td>Estáticos</td><td><code>static/css/style.css</code></td><td>Estilos visuales (verde, blanco, gradientes)</td></tr>
+        <tr><td>Rutas</td><td><code>expenses/urls.py</code></td><td>Mapeo de URLs a vistas</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 4. MODELO DE DATOS -->
+    <h1>4. Modelo de Datos</h1>
+    <h2>4.1 Tabla: categories</h2>
+    <table>
+      <thead>
+        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>id</td><td>AutoField (PK)</td><td>Identificador único</td></tr>
+        <tr><td>name</td><td>CharField(100)</td><td>Nombre de la categoría</td></tr>
+        <tr><td>type</td><td>CharField(10)</td><td>Tipo: INCOME (Ingreso) o EXPENSE (Gasto)</td></tr>
+        <tr><td>user_id</td><td>ForeignKey (User)</td><td>Usuario propietario</td></tr>
+        <tr><td>created_at</td><td>DateTimeField</td><td>Fecha de creación automática</td></tr>
+      </tbody>
+    </table>
+    <p><i>Restricción:</i> Un usuario no puede tener dos categorías con el mismo nombre y tipo (<code>unique_user_category</code>).</p>
+
+    <h2>4.2 Tabla: transactions</h2>
+    <table>
+      <thead>
+        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>id</td><td>AutoField (PK)</td><td>Identificador único</td></tr>
+        <tr><td>description</td><td>CharField(200)</td><td>Descripción del movimiento</td></tr>
+        <tr><td>amount</td><td>DecimalField(12,2)</td><td>Monto del movimiento (debe ser positivo)</td></tr>
+        <tr><td>date</td><td>DateField</td><td>Fecha del movimiento</td></tr>
+        <tr><td>category_id</td><td>ForeignKey (Category)</td><td>Categoría asociada (PROTECT)</td></tr>
+        <tr><td>user_id</td><td>ForeignKey (User)</td><td>Usuario propietario</td></tr>
+        <tr><td>created_at</td><td>DateTimeField</td><td>Fecha de creación automática</td></tr>
+      </tbody>
+    </table>
+    <p><i>Restricción:</i> El monto debe ser mayor a cero (<code>transaction_amount_positive</code>). Una categoría con transacciones no se puede eliminar (<code>PROTECT</code>).</p>
+
+    <h2>4.3 Tablas del sistema de Django</h2>
+    <p>Además de las tablas propias, Django crea automáticamente:</p>
+    <ul>
+      <li><code>auth_user</code>: Usuarios del sistema</li>
+      <li><code>django_migrations</code>: Registro de migraciones aplicadas</li>
+      <li><code>django_content_type</code>: Tipos de contenido</li>
+      <li><code>auth_group</code> y <code>auth_permission</code>: Sistema de permisos</li>
+      <li><code>django_session</code>: Sesiones de usuario</li>
+      <li><code>django_admin_log</code>: Historial del panel de administración</li>
+    </ul>
+
+    <!-- 5. FLUJO DE LA APLICACIÓN -->
+    <h1>5. Flujo de la Aplicación</h1>
+    <table>
+      <thead>
+        <tr><th>Pantalla</th><th>Ruta</th><th>Acción del Usuario</th><th>Destino</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Login</td><td><code>/accounts/login/</code></td><td>Ingresa usuario y contraseña</td><td>Dashboard</td></tr>
+        <tr><td>Registro</td><td><code>/signup/</code></td><td>Crea una nueva cuenta</td><td>Dashboard (sesión iniciada)</td></tr>
+        <tr><td>Dashboard</td><td><code>/</code></td><td>Ve resumen financiero y accede a módulos</td><td>Movimientos o Categorías</td></tr>
+        <tr><td>Movimientos</td><td><code>/transactions/</code></td><td>Lista, crea, edita o elimina movimientos</td><td>Lista de movimientos</td></tr>
+        <tr><td>Categorías</td><td><code>/categories/</code></td><td>Lista, crea, edita o elimina categorías</td><td>Lista de categorías</td></tr>
+        <tr><td>Cerrar sesión</td><td><code>/accounts/logout/</code></td><td>Cierra la sesión de usuario</td><td>Login</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>Nota de negocio:</b> Una categoría con transacciones asociadas no se puede eliminar. El sistema muestra un mensaje de error si se intenta.
+    </div>
+
+    <!-- 6. JENKINS -->
+    <h1>6. Pipeline CI/CD con Jenkins</h1>
+    <table>
+      <thead>
+        <tr><th>Etapa</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Checkout SCM</td><td>Obtiene el código fuente del repositorio GitHub.</td></tr>
+        <tr><td>Checkout</td><td>Prepara el workspace de construcción.</td></tr>
+        <tr><td>Build Docker Image</td><td>Construye la imagen Docker con <code>docker compose build</code>.</td></tr>
+        <tr><td>Django Check</td><td>Ejecuta <code>python manage.py check</code> para validar la configuración.</td></tr>
+        <tr><td>Run Tests</td><td>Ejecuta pruebas automatizadas con <code>python manage.py test</code>.</td></tr>
+        <tr><td>Deploy</td><td>Despliega la aplicación solo en la rama <code>main</code>.</td></tr>
+      </tbody>
+    </table>
+    <p><b>Trigger:</b> El pipeline usa <code>pollSCM</code> para revisar periódicamente cambios en el repositorio.</p>
+    <p><b>¿Dónde queda el deploy?</b> En el mismo servidor donde está Jenkins, disponible en <code>http://localhost:8000</code> (o la IP del servidor).</p>
+
+    <!-- 7. DISEÑO UI/UX -->
+    <h1>7. Diseño de Interfaz (UI/UX)</h1>
+    <ul>
+      <li><b>Paleta de colores:</b> Verde esmeralda (#10b981), verde oscuro (#047857), blanco y fondos degradados verde claro → blanco → verde claro.</li>
+      <li><b>Tipografía:</b> Inter para jerarquía visual clara.</li>
+      <li><b>Componentes:</b> Tarjetas elevadas con sombra, botones con gradiente verde, tablas con filas zebra, badges de tipo (ingreso/gasto).</li>
+      <li><b>Mensajes de éxito:</b> Fondo verde claro, borde izquierdo verde, ícono de check.</li>
+      <li><b>Mensajes de error:</b> Fondo rojo claro, borde izquierdo rojo, ícono de alerta.</li>
+      <li><b>Responsive:</b> Se adapta a pantallas móviles.</li>
+    </ul>
+
+    <!-- 8. REGISTRO DE USUARIOS -->
+    <h1>8. Registro de Usuarios y Autenticación</h1>
+    <ul>
+      <li>Formulario <code>CustomUserCreationForm</code> con campos: usuario, email, contraseña y confirmación.</li>
+      <li>Vista <code>signup</code> que crea la cuenta, inicia sesión automáticamente y redirige al dashboard.</li>
+      <li>URL <code>/signup/</code> con nombre <code>signup</code>.</li>
+      <li>Plantilla <code>templates/registration/signup.html</code> con el mismo estilo verde/blanco.</li>
+      <li>Se eliminó el enlace de "¿Olvidaste tu contraseña?" del login.</li>
+      <li>Todos los inputs y selects ocupan el ancho completo en login, registro, categorías y movimientos.</li>
+    </ul>
+
+    <!-- 9. EVIDENCIAS -->
+    <div class="evidence-section">
+      <h1>9. Evidencias del Proyecto</h1>
+      <p>A continuación se presentan las capturas de pantalla obtenidas durante la ejecución y prueba de la aplicación:</p>
+
+      <div class="evidence-grid">
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 112913.png" alt="Login">
+          <p>Pantalla de Inicio de Sesión</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113016.png" alt="Dashboard">
+          <p>Panel Financiero (Dashboard)</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113042.png" alt="Registro movimiento">
+          <p>Registro de Movimiento</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113101.png" alt="Listado movimientos">
+          <p>Mis Movimientos (Listado)</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113118.png" alt="Mensajes">
+          <p>Mensajes de Error y Éxito</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113154.png" alt="Categorías">
+          <p>Gestión de Categorías</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113211.png" alt="Jenkins">
+          <p>Pipeline de Jenkins</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113236.png" alt="Docker">
+          <p>Docker y Contenedores</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113252.png" alt="Responsive">
+          <p>Interfaz Responsiva</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113316.png" alt="Tests">
+          <p>Pruebas Automatizadas</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113328.png" alt="Deploy">
+          <p>Despliegue</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113423.png" alt="Navegador">
+          <p>Aplicación en Navegador</p>
+        </div>
+        <div class="evidence-item">
+          <img src="evidence/Captura de pantalla 2026-11-07 113446.png" alt="Código">
+          <p>Código Fuente</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. CONCLUSIÓN -->
+    <div class="page-break">
+      <h1>10. Conclusión</h1>
+      <h2>¿De qué se trata el proyecto?</h2>
+      <p>
+        <b>Expense Manager</b> es una aplicación web para el control financiero personal desarrollada con Django y Python.
+        Permite registrar, consultar, actualizar y eliminar ingresos y gastos, organizados por categorías. Cada usuario tiene
+        su propia información aislada, y puede consultar en un dashboard el resumen de ingresos totales, gastos totales y
+        el balance disponible. El proyecto incorpora prácticas DevOps como contenedorización con Docker, pipeline de CI/CD
+        con Jenkins y organización del código mediante GitFlow.
+      </p>
+
+      <h2>¿Por qué es útil?</h2>
+      <ul>
+        <li><b>Control financiero personal:</b> Ayuda a los usuarios a llevar un registro ordenado de sus entradas y salidas de dinero.</li>
+        <li><b>Toma de decisiones:</b> Al visualizar ingresos, gastos y balance en un solo lugar, es más fácil planificar gastos y ahorros.</li>
+        <li><b>Separación por usuario:</b> Cada persona accede solo a su propia información, garantizando privacidad.</li>
+        <li><b>Automatización DevOps:</b> El pipeline de Jenkins construye, prueba y despliega la aplicación automáticamente, reduciendo errores humanos.</li>
+        <li><b>Interfaz amigable:</b> El diseño verde y blanco con gradientes, tarjetas, mensajes de error y éxito bonitos hace que la aplicación sea agradable y fácil de usar.</li>
+        <li><b>Portabilidad:</b> Al estar contenedorizada con Docker, la aplicación se puede ejecutar en cualquier entorno sin problemas de dependencias.</li>
+      </ul>
+
+      <div class="callout">
+        <b>En resumen:</b> Expense Manager cumple con los requisitos de una aplicación de gestión financiera personal,
+        integrando desarrollo de software con prácticas DevOps modernos, y ofrece una herramienta útil, usable y automatizada
+        para el control de gastos e ingresos.
+      </div>
+
+      <div class="footer-note">
+        Documentación generada para entrega académica del proyecto Expense Manager DevOps.<br>
+        © 2026 - Todos los derechos reservados.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
