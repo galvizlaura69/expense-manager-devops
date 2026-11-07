@@ -515,8 +515,10 @@ td strong {
   color: var(--gray-700);
 }
 
-.form-control {
+.form-control,
+.form-select {
   width: 100%;
+  max-width: 100%;
   padding: 0.8rem 1rem;
   border: 2px solid var(--gray-200);
   border-radius: var(--radius-sm);
@@ -524,9 +526,11 @@ td strong {
   background: var(--gray-50);
   color: var(--gray-900);
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   outline: none;
   border-color: var(--green-500);
   background: var(--white);
@@ -535,6 +539,29 @@ td strong {
 
 .form-control::placeholder {
   color: var(--gray-400);
+}
+
+/* Campo monetario */
+.money-input {
+  font-family: 'Inter', 'Courier New', monospace;
+  font-size: 1rem;
+}
+
+.money-input::-webkit-outer-spin-button,
+.money-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.money-input[type='number'] {
+  appearance: textfield;
+}
+
+/* Hint visual para miles */
+.field-hint {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-top: 0.35rem;
 }
 
 .select-wrap {

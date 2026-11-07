@@ -11,6 +11,11 @@ class CategoryForm(forms.ModelForm):
 
         fields = ['name', 'type']
 
+        labels = {
+            'name': 'Nombre',
+            'type': 'Tipo',
+        }
+
         widgets = {
             'name': forms.TextInput(
                 attrs={'class': 'form-control'}
@@ -28,15 +33,24 @@ class TransactionForm(forms.ModelForm):
 
         fields = ['description', 'amount', 'date', 'category']
 
+        labels = {
+            'description': 'Descripción',
+            'amount': 'Monto',
+            'date': 'Fecha',
+            'category': 'Categoría',
+        }
+
         widgets = {
             'description': forms.TextInput(
                 attrs={'class': 'form-control'}
             ),
-            'amount': forms.NumberInput(
+            'amount': forms.TextInput(
                 attrs={
-                    'class': 'form-control',
-                    'step': '0.01',
-                    'min': '0.01'
+                    'class': 'form-control money-input',
+                    'inputmode': 'decimal',
+                    'pattern': '[0-9]*',
+                    'placeholder': '0.00',
+                    'autocomplete': 'off'
                 }
             ),
             'date': forms.DateInput(

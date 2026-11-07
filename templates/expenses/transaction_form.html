@@ -56,4 +56,65 @@
     </form>
   </div>
 </div>
+
+<script>
+  // Formateo visual de monto con separador de miles
+  (function() {
+    var moneyInputs = document.querySelectorAll('.money-input');
+
+    function formatMoney(value) {
+      if (value === '') return '';
+      // Solo dígitos
+      var digits = value.replace(/[^0-9]/g, '');
+      if (digits === '') return '';
+      var num = parseInt(digits, 10);
+      if (isNaN(num)) return '';
+      // Entero con separador de miles (puntos)
+      var intPart = num.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      var decPart = '';
+      // Si había coma o punto decimal en el original, capturar decimales
+      var decimalMatch = value.match(/[.,](\d{1,2})$/);
+      if (decimalMatch) {
+        decPart = ',' + decimalMatch[1].padEnd(2, '0');
+      } else {
+        decPart = ',00';
+      }
+      return intPart + decPart;
+    }
+
+    function unformatMoney(value) {
+      if (value === '') return '';
+      // Quitar todo menos dígitos, punto y coma
+      var cleaned = value.replace(/[^0-9.,]/g, '');
+      // Reemplazar coma decimal por punto y quitar puntos de miles
+      cleaned = cleaned.replace(/\./g, '').replace(/,/g, '.');
+      return cleaned;
+    }
+
+    moneyInputs.forEach(function(input) {
+      // Al salir del campo, formatear visualmente
+      input.addEventListener('blur', function() {
+        var raw = unformatMoney(input.value);
+        if (raw !== '' && !isNaN(raw)) {
+          input.value = formatMoney(raw);
+        }
+      });
+
+      // Al entrar al campo, mostrar valor limpio para editar fácilmente
+      input.addEventListener('focus', function() {
+        input.value = unformatMoney(input.value).replace('.', ',');
+      });
+    });
+
+    // Al enviar el form, dejar los valores limpios (sin puntos de miles)
+    var form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', function() {
+        moneyInputs.forEach(function(input) {
+          input.value = unformatMoney(input.value);
+        });
+      });
+    }
+  })();
+</script>
 {% endblock %}
