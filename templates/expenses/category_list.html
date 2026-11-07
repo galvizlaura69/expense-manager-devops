@@ -1,20 +1,86 @@
-<h1>Mis categorías</h1>
+{% extends "base.html" %}
 
-<a href="{% url 'category_create' %}">Nueva categoría</a>
+{% block title %}Categorías | Expense Manager{% endblock %}
 
-{% for category in categories %}
-    <div>
-        <strong>{{ category.name }}</strong>
-        - {{ category.get_type_display }}
+{% block content %}
+<div class="container">
+  <header class="page-header">
+    <h1 class="page-title">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="30" height="30">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+      </svg>
+      Mis categorías
+    </h1>
+    <p class="page-subtitle">
+      Organiza tus ingresos y gastos por categoría.
+    </p>
+  </header>
 
-        <a href="{% url 'category_update' category.pk %}">
-            Editar
-        </a>
-
-        <a href="{% url 'category_delete' category.pk %}">
-            Eliminar
-        </a>
+  <div class="section-card">
+    <div class="section-header">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+      </svg>
+      <h2 class="section-title">Listado de categorías</h2>
     </div>
-{% empty %}
-    <p>No tienes categorías registradas.</p>
-{% endfor %}
+
+    <a href="{% url 'category_create' %}" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="17" height="17">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Nueva categoría
+    </a>
+
+    {% if categories %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Creada</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for category in categories %}
+            <tr>
+              <td>
+                <strong>{{ category.name }}</strong>
+              </td>
+              <td>
+                <span class="badge
+                  {% if category.type == 'INCOME' %}badge-income{% else %}badge-expense{% endif %}">
+                  {{ category.get_type_display }}
+                </span>
+              </td>
+              <td>{{ category.created_at|date:"d/m/Y" }}</td>
+              <td>
+                <div class="actions">
+                  <a href="{% url 'category_update' category.pk %}"
+                     class="btn btn-outline btn-sm">Editar</a>
+                  <a href="{% url 'category_delete' category.pk %}"
+                     class="btn btn-danger btn-sm">Eliminar</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="150" height="150">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+        </svg>
+        <h3>No tienes categorías registradas</h3>
+        <p>Crea tu primera categoría para clasificar ingresos y gastos.</p>
+        <a href="{% url 'category_create' %}" class="btn btn-primary" style="margin-top:1rem;">Crear categoría</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

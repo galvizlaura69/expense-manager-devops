@@ -1,37 +1,63 @@
-<h1>Expense Manager</h1>
+{% extends "base.html" %}
 
-<h2>Resumen financiero</h2>
+{% block title %}Inicio | Expense Manager{% endblock %}
 
-<div>
-    <h3>Ingresos</h3>
-    <p>${{ income }}</p>
+{% block content %}
+<div class="container">
+  <header class="page-header">
+    <h1 class="page-title">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="30" height="30">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2-3 .895-3-2 1.343-2-3-2m0 8c1.657 0 3-.895 3-2 0-1.105-1.343-2-3-2-1.657 0-3 .895-3 2 0 1.105 1.343 2 3 2m0 0c1.657 0 3 .895 3 2 0 1.105-1.343 2-3 2-1.657 0-3-.895-3-2 0-1.105 1.343-2 3-2z"/>
+      </svg>
+      Panel financiero
+    </h1>
+    <p class="page-subtitle">
+      Resumen de tus ingresos, gastos y balance disponible.
+    </p>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">💵</span>
+      <div class="stat-label">Ingresos totales</div>
+      <div class="stat-value income">${{ income }}</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">💸</span>
+      <div class="stat-label">Gastos totales</div>
+      <div class="stat-value expense">${{ expenses }}</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🏦</span>
+      <div class="stat-label">Balance disponible</div>
+      <div class="stat-value balance">${{ balance }}</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      <h2 class="section-title">Acciones rápidas</h2>
+    </div>
+
+    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+      <a href="{% url 'transaction_list' %}" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="17" height="17">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Ver movimientos
+      </a>
+      <a href="{% url 'transaction_create' %}" class="btn btn-outline">
+        Registrar movimiento
+      </a>
+      <a href="{% url 'category_list' %}" class="btn btn-outline">
+        Administrar categorías
+      </a>
+    </div>
+  </div>
 </div>
-
-<div>
-    <h3>Gastos</h3>
-    <p>${{ expenses }}</p>
-</div>
-
-<div>
-    <h3>Balance disponible</h3>
-    <p>${{ balance }}</p>
-</div>
-
-<hr>
-
-<a href="{% url 'category_list' %}">
-    Administrar categorías
-</a>
-
-<br>
-
-<a href="{% url 'transaction_list' %}">
-    Administrar movimientos
-</a>
-
-<br>
-
-<form method="POST" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Cerrar sesión</button>
-</form>
+{% endblock %}

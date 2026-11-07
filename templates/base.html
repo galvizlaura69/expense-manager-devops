@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Expense Manager{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <div class="app">
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="{% url 'dashboard' %}" class="brand">
+          <span class="mark">💰</span>
+          <span>Expense Manager</span>
+        </a>
+
+        {% if request.user.is_authenticated %}
+          <div class="nav-links">
+            <a href="{% url 'dashboard' %}"
+               {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>
+              Inicio
+            </a>
+            <a href="{% url 'transaction_list' %}"
+               {% if request.resolver_match.url_name in 'transaction_list,transaction_create,transaction_update,transaction_delete' %}class="active"{% endif %}>
+              Movimientos
+            </a>
+            <a href="{% url 'category_list' %}"
+               {% if request.resolver_match.url_name in 'category_list,category_create,category_update,category_delete' %}class="active"{% endif %}>
+              Categorías
+            </a>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline; margin:0;">
+              {% csrf_token %}
+              <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </nav>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert
+            {% if message.tags == 'success' %}alert-success
+            {% elif message.tags == 'error' %}alert-error
+            {% else %}alert-error{% endif %}"
+               role="alert">
+            {% if message.tags == 'success' %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7"/>
+              </svg>
+            {% else %}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            {% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <p>© {% now "Y" %} Expense Manager — Control financiero personal.</p>
+    </footer>
+  </div>
+</body>
+</html>

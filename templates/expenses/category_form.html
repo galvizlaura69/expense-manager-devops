@@ -1,11 +1,59 @@
-<h1>Administrar categoría</h1>
+{% extends "base.html" %}
 
-<form method="POST">
-    {% csrf_token %}
+{% block title %}Administrar categoría | Expense Manager{% endblock %}
 
-    {{ form.as_p }}
+{% block content %}
+<div class="container">
+  <header class="page-header">
+    <h1 class="page-title">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="30" height="30">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+      </svg>
+      {% if form.instance.pk %}Editar categoría{% else %}Nueva categoría{% endif %}
+    </h1>
+    <p class="page-subtitle">
+      Define el nombre y el tipo (ingreso o gasto) de la categoría.
+    </p>
+  </header>
 
-    <button type="submit">Guardar</button>
-</form>
+  <div class="form-card">
+    <form method="POST">
+      {% csrf_token %}
 
-<a href="{% url 'category_list' %}">Volver</a>
+      {% if form.non_field_errors %}
+        <div class="alert alert-error" role="alert">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <ul style="margin:0.35rem 0 0 0; padding-left:1.2rem; font-size:0.9rem; font-weight:600;">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div class="form-group">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="form-actions">
+        <a href="{% url 'category_list' %}" class="btn btn-outline">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar categoría</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
