@@ -271,30 +271,7 @@ def dashboard(request):
 
     balance = income - expenses
 
-    # Estadísticas por categoría para el dashboard
-    category_stats = []
-    for cat in categories:
-        cat_transactions = transactions.filter(category=cat)
-        cat_total = cat_transactions.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
-        if cat_total > 0:
-            category_stats.append({
-                'name': cat.name,
-                'type': cat.get_type_display(),
-                'type_code': cat.type,
-                'total': float(cat_total),
-                'count': cat_transactions.count(),
-            })
-
-    # Ordenar por monto total descendente
-    category_stats.sort(key=lambda x: x['total'], reverse=True)
-
-    # Movimientos recientes filtrados (últimos 10)
-    recent_transactions = transactions.order_by('-date', '-id')[:10]
-
-    # Datos para gráfico de ingresos vs gastos por mes (últimos 6 meses)
-    from calendar import month_name
-    from django.db.models.functions import TruncMonth
-
+    # Datos para gráfico de barras: Ingresos vs Gastos por mes (últimos 6 meses)
     monthly_data = {}
     for i in range(5, -1, -1):
         month_date = date.today().replace(day=1) - timedelta(days=30 * i)
@@ -337,8 +314,6 @@ def dashboard(request):
             'selected_type': type_filter or '',
             'date_from': date_from or '',
             'date_to': date_to or '',
-            'category_stats': category_stats,
-            'recent_transactions': recent_transactions,
             'monthly_labels': monthly_labels,
             'monthly_income': monthly_income,
             'monthly_expense': monthly_expense,

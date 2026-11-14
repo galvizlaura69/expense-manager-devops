@@ -259,9 +259,10 @@
         <li>5. Flujo de la Aplicación</li>
         <li>6. Pipeline CI/CD con Jenkins</li>
         <li>7. Diseño de Interfaz (UI/UX)</li>
-        <li>8. Registro de Usuarios y Autenticación</li>
-        <li>9. Evidencias del Proyecto</li>
-        <li>10. Conclusión</li>
+        <li>8. Dashboard con Filtros y Gráficos</li>
+        <li>9. Registro de Usuarios y Autenticación</li>
+        <li>10. Evidencias del Proyecto</li>
+        <li>11. Conclusión</li>
       </ul>
     </div>
 
@@ -409,9 +410,21 @@
       <li><b>Mensajes de éxito:</b> Fondo verde claro, borde izquierdo verde, ícono de check.</li>
       <li><b>Mensajes de error:</b> Fondo rojo claro, borde izquierdo rojo, ícono de alerta.</li>
       <li><b>Responsive:</b> Se adapta a pantallas móviles.</li>
+      <li><b>Gráficos:</b> Gráfico de barras de Ingresos vs Gastos por mes (últimos 6 meses) en el dashboard.</li>
     </ul>
 
-    <!-- 8. REGISTRO DE USUARIOS -->
+    <!-- 8. DASHBOARD CON FILTROS Y GRÁFICOS -->
+    <h1>8. Dashboard con Filtros y Gráficos</h1>
+    <p>El panel inicial muestra tres tarjetas de métricas principales y un gráfico de barras:</p>
+    <ul>
+      <li><b>Ingresos totales:</b> Suma de todos los movimientos de tipo ingreso.</li>
+      <li><b>Gastos totales:</b> Suma de todos los movimientos de tipo gasto.</li>
+      <li><b>Balance disponible:</b> Ingresos menos gastos.</li>
+      <li><b>Gráfico de barras:</b> Comparativa mensual de ingresos vs gastos (últimos 6 meses).</li>
+    </ul>
+    <p><b>Filtros disponibles:</b> Tipo (Ingreso/Gasto/Todos), Categoría y rango de fechas (desde/hasta). Los filtros se aplican tanto a las tarjetas de métricas como al gráfico.</p>
+
+    <!-- 9. REGISTRO DE USUARIOS -->
     <h1>8. Registro de Usuarios y Autenticación</h1>
     <ul>
       <li>Formulario <code>CustomUserCreationForm</code> con campos: usuario, email, contraseña y confirmación.</li>
