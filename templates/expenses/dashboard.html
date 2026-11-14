@@ -18,7 +18,26 @@
     </p>
   </header>
 
-  <!-- Filtros simples -->
+  <!-- Tarjetas de métricas (primero) -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">💵</span>
+      <div class="stat-label">Ingresos totales</div>
+      <div class="stat-value income">${{ income|intcomma }}</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">💸</span>
+      <div class="stat-label">Gastos totales</div>
+      <div class="stat-value expense">${{ expenses|intcomma }}</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🏦</span>
+      <div class="stat-label">Balance disponible</div>
+      <div class="stat-value balance">${{ balance|intcomma }}</div>
+    </div>
+  </div>
+
+  <!-- Filtros simples (despues de tarjetas) -->
   <form method="GET" class="filters-form">
     <div class="filter-group">
       <label class="filter-label">Tipo</label>
@@ -53,26 +72,7 @@
     </div>
   </form>
 
-  <!-- Tarjetas de métricas (sin cambios) -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-icon">💵</span>
-      <div class="stat-label">Ingresos totales</div>
-      <div class="stat-value income">${{ income|intcomma }}</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">💸</span>
-      <div class="stat-label">Gastos totales</div>
-      <div class="stat-value expense">${{ expenses|intcomma }}</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">🏦</span>
-      <div class="stat-label">Balance disponible</div>
-      <div class="stat-value balance">${{ balance|intcomma }}</div>
-    </div>
-  </div>
-
-  <!-- Gráfico de barras simple -->
+  <!-- Gráfico de barras simple (ultimo) -->
   <div class="section-card">
     <div class="section-header">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
