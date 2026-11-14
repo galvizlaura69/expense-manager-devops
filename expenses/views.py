@@ -10,8 +10,10 @@ from .models import Category
 from .forms import CategoryForm, CustomUserCreationForm
 
 
+from datetime import date, timedelta
 from decimal import Decimal
 from django.db.models import Sum
+from django.db.models.functions import TruncMonth
 
 
 @login_required
@@ -279,7 +281,7 @@ def dashboard(request):
                 'name': cat.name,
                 'type': cat.get_type_display(),
                 'type_code': cat.type,
-                'total': cat_total,
+                'total': float(cat_total),
                 'count': cat_transactions.count(),
             })
 
@@ -288,6 +290,40 @@ def dashboard(request):
 
     # Movimientos recientes filtrados (últimos 10)
     recent_transactions = transactions.order_by('-date', '-id')[:10]
+
+    # Datos para gráfico de ingresos vs gastos por mes (últimos 6 meses)
+    from calendar import month_name
+    from django.db.models.functions import TruncMonth
+
+    monthly_data = {}
+    for i in range(5, -1, -1):
+        month_date = date.today().replace(day=1) - timedelta(days=30 * i)
+        month_key = month_date.strftime('%Y-%m')
+        month_label = month_date.strftime('%b %Y')
+        monthly_data[month_key] = {
+            'label': month_label,
+            'income': 0.0,
+            'expense': 0.0,
+        }
+
+    monthly_transactions = transactions.annotate(
+        month=TruncMonth('date')
+    ).values('month', 'category__type').annotate(
+        total=Sum('amount')
+    )
+
+    for entry in monthly_transactions:
+        month_key = entry['month'].strftime('%Y-%m')
+        if month_key in monthly_data:
+            val = float(entry['total'])
+            if entry['category__type'] == 'INCOME':
+                monthly_data[month_key]['income'] = val
+            else:
+                monthly_data[month_key]['expense'] = val
+
+    monthly_labels = [v['label'] for v in monthly_data.values()]
+    monthly_income = [v['income'] for v in monthly_data.values()]
+    monthly_expense = [v['expense'] for v in monthly_data.values()]
 
     return render(
         request,
@@ -303,6 +339,9 @@ def dashboard(request):
             'date_to': date_to or '',
             'category_stats': category_stats,
             'recent_transactions': recent_transactions,
+            'monthly_labels': monthly_labels,
+            'monthly_income': monthly_income,
+            'monthly_expense': monthly_expense,
         }
     )
 

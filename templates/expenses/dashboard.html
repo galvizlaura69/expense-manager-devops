@@ -3,6 +3,10 @@
 
 {% block title %}Inicio | Expense Manager{% endblock %}
 
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <header class="page-header">
@@ -72,6 +76,24 @@
     </div>
   </div>
 
+  <!-- Gráficos -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Ingresos vs Gastos por mes</h3>
+        <p class="chart-subtitle">Últimos 6 meses</p>
+      </div>
+      <canvas id="incomeExpenseChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Distribución por categoría</h3>
+        <p class="chart-subtitle">Monto total por categoría</p>
+      </div>
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+
   <!-- Estadísticas por categoría -->
   {% if category_stats %}
   <div class="section-card">
@@ -107,7 +129,7 @@
             </td>
             <td>{{ stat.count }}</td>
             <td>
-              <strong>${{ stat.total|intcomma }}</strong>
+              <strong>${{ stat.total|floatformat:2|intcomma }}</strong>
             </td>
           </tr>
           {% endfor %}
@@ -175,4 +197,105 @@
     </a>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Datos pasados desde Django
+  const monthlyLabels = {{ monthly_labels|safe }};
+  const monthlyIncome = {{ monthly_income|safe }};
+  const monthlyExpense = {{ monthly_expense|safe }};
+
+  const categoryLabels = {% for stat in category_stats %}"{{ stat.name }}"{% if not forloop.last %}, {% endif %}{% endfor %};
+  const categoryData = {% for stat in category_stats %}{{ stat.total }}{% if not forloop.last %}, {% endif %}{% endfor %};
+  const categoryColors = {% for stat in category_stats %}"{% if stat.type_code == 'INCOME' %}#10b981{% else %}#dc2626{% endif %}"{% if not forloop.last %}, {% endif %}{% endfor %};
+
+  // Gráfico de barras: Ingresos vs Gastos por mes
+  const ctxBar = document.getElementById('incomeExpenseChart').getContext('2d');
+  new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: monthlyLabels,
+      datasets: [
+        {
+          label: 'Ingresos',
+          data: monthlyIncome,
+          backgroundColor: 'rgba(16, 185, 129, 0.8)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          borderRadius: 6,
+        },
+        {
+          label: 'Gastos',
+          data: monthlyExpense,
+          backgroundColor: 'rgba(220, 38, 38, 0.8)',
+          borderColor: '#dc2626',
+          borderWidth: 1,
+          borderRadius: 6,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { color: '#374151', font: { family: 'Inter', size: 12 } }
+        },
+        title: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#6b7280', font: { family: 'Inter', size: 11 } },
+          grid: { color: '#f3f4f6' }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#6b7280', font: { family: 'Inter', size: 11 }, callback: function(value) { return '$' + value; } },
+          grid: { color: '#f3f4f6' }
+        }
+      }
+    }
+  });
+
+  // Gráfico de dona: Distribución por categoría
+  const ctxDoughnut = document.getElementById('categoryChart').getContext('2d');
+  new Chart(ctxDoughnut, {
+    type: 'doughnut',
+    data: {
+      labels: categoryLabels,
+      datasets: [{
+        data: categoryData,
+        backgroundColor: categoryColors,
+        borderColor: '#ffffff',
+        borderWidth: 3,
+        hoverOffset: 20
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '70%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#374151', font: { family: 'Inter', size: 12 }, padding: 20 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.label || '';
+              let value = context.parsed || 0;
+              let total = context.chart._metasets[0].total;
+              let percentage = Math.round((value / total) * 100);
+              return label + ': $' + value.toFixed(2) + ' (' + percentage + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
 {% endblock %}
