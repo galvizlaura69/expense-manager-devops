@@ -9,7 +9,7 @@
     <h1 class="page-title">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="30" height="30">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2-3 .895-3-2 1.343-2-3-2m0 8c1.657 0 3-.895 3-2 0-1.105-1.343-2-3-2-1.657 0-3 .895-3 2 0 1.105 1.343 2 3 2m0 0c1.657 0 3 .895 3 2 0 1.105-1.343 2-3 2-1.657 0-3-.895-3-2 0-1.105 1.343-2 3-2z"/>
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2-3 .895-3-2 1.343-2-3-2m0 8c1.657 0 3-.895 3-2 0-1.105-1.343-2-3-2-1.657 0-3 .895-3 2 0 1.105 1.343 2 3 2z"/>
       </svg>
       Panel financiero
     </h1>
@@ -18,6 +18,42 @@
     </p>
   </header>
 
+  <!-- Filtros del dashboard -->
+  <form method="GET" class="filters-form">
+    <div class="filter-group">
+      <label class="filter-label">Categoría</label>
+      <select name="category" class="form-control">
+        <option value="">Todas</option>
+        {% for cat in categories %}
+          <option value="{{ cat.pk }}" {% if selected_category == cat.pk|stringformat:"s" %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Tipo</label>
+      <select name="type" class="form-control">
+        <option value="">Todos</option>
+        <option value="INCOME" {% if selected_type == 'INCOME' %}selected{% endif %}>Ingreso</option>
+        <option value="EXPENSE" {% if selected_type == 'EXPENSE' %}selected{% endif %}>Gasto</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Fecha desde</label>
+      <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Fecha hasta</label>
+      <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+    </div>
+    <div class="filter-group filter-actions">
+      <button type="submit" class="btn btn-primary">Filtrar</button>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline">Limpiar</a>
+    </div>
+  </form>
+
+  <!-- Tarjetas de métricas principales -->
   <div class="stats-grid">
     <div class="stat-card">
       <span class="stat-icon">💵</span>
@@ -36,29 +72,107 @@
     </div>
   </div>
 
+  <!-- Estadísticas por categoría -->
+  {% if category_stats %}
   <div class="section-card">
     <div class="section-header">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110 4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110 4m0 4v2m0-6V4"/>
       </svg>
-      <h2 class="section-title">Acciones rápidas</h2>
+      <h2 class="section-title">Estadísticas por categoría</h2>
     </div>
 
-    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-      <a href="{% url 'transaction_list' %}" class="btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="17" height="17">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Ver movimientos
-      </a>
-      <a href="{% url 'transaction_create' %}" class="btn btn-outline">
-        Registrar movimiento
-      </a>
-      <a href="{% url 'category_list' %}" class="btn btn-outline">
-        Administrar categorías
-      </a>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Tipo</th>
+            <th>Movimientos</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stat in category_stats %}
+          <tr>
+            <td>
+              <strong>{{ stat.name }}</strong>
+            </td>
+            <td>
+              <span class="badge
+                {% if stat.type_code == 'INCOME' %}badge-income{% else %}badge-expense{% endif %}">
+                {{ stat.type }}
+              </span>
+            </td>
+            <td>{{ stat.count }}</td>
+            <td>
+              <strong>${{ stat.total|intcomma }}</strong>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+  {% endif %}
+
+  <!-- Movimientos recientes -->
+  <div class="section-card">
+    <div class="section-header">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+      </svg>
+      <h2 class="section-title">Movimientos recientes</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Valor</th>
+            <th>Categoría</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in recent_transactions %}
+          <tr>
+            <td>
+              <strong>{{ transaction.description }}</strong>
+            </td>
+            <td>${{ transaction.amount|intcomma }}</td>
+            <td>{{ transaction.category.name }}</td>
+            <td>
+              <span class="badge
+                {% if transaction.category.type == 'INCOME' %}badge-income{% else %}badge-expense{% endif %}">
+                {{ transaction.category.get_type_display }}
+              </span>
+            </td>
+            <td>{{ transaction.date|date:"d/m/Y" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center; color:var(--gray-500);">
+              No hay movimientos con los filtros aplicados.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top:1.5rem;">
+    <a href="{% url 'transaction_list' %}" class="btn btn-outline">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="17" height="17">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Ver todos los movimientos
+    </a>
   </div>
 </div>
 {% endblock %}

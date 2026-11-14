@@ -238,7 +238,26 @@ def dashboard(request):
 
     transactions = Transaction.objects.filter(
         user=request.user
-    )
+    ).select_related('category')
+
+    categories = Category.objects.filter(user=request.user)
+
+    category_id = request.GET.get('category')
+    type_filter = request.GET.get('type')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+
+    if category_id:
+        transactions = transactions.filter(category_id=category_id)
+
+    if type_filter:
+        transactions = transactions.filter(category__type=type_filter)
+
+    if date_from:
+        transactions = transactions.filter(date__gte=date_from)
+
+    if date_to:
+        transactions = transactions.filter(date__lte=date_to)
 
     income = transactions.filter(
         category__type='INCOME'
@@ -250,13 +269,40 @@ def dashboard(request):
 
     balance = income - expenses
 
+    # Estadísticas por categoría para el dashboard
+    category_stats = []
+    for cat in categories:
+        cat_transactions = transactions.filter(category=cat)
+        cat_total = cat_transactions.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+        if cat_total > 0:
+            category_stats.append({
+                'name': cat.name,
+                'type': cat.get_type_display(),
+                'type_code': cat.type,
+                'total': cat_total,
+                'count': cat_transactions.count(),
+            })
+
+    # Ordenar por monto total descendente
+    category_stats.sort(key=lambda x: x['total'], reverse=True)
+
+    # Movimientos recientes filtrados (últimos 10)
+    recent_transactions = transactions.order_by('-date', '-id')[:10]
+
     return render(
         request,
         'expenses/dashboard.html',
         {
             'income': income,
             'expenses': expenses,
-            'balance': balance
+            'balance': balance,
+            'categories': categories,
+            'selected_category': category_id or '',
+            'selected_type': type_filter or '',
+            'date_from': date_from or '',
+            'date_to': date_to or '',
+            'category_stats': category_stats,
+            'recent_transactions': recent_transactions,
         }
     )
 
