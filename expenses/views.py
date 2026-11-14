@@ -120,10 +120,36 @@ def transaction_list(request):
         user=request.user
     ).select_related('category')
 
+    categories = Category.objects.filter(user=request.user)
+
+    category_id = request.GET.get('category')
+    type_filter = request.GET.get('type')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+
+    if category_id:
+        transactions = transactions.filter(category_id=category_id)
+
+    if type_filter:
+        transactions = transactions.filter(category__type=type_filter)
+
+    if date_from:
+        transactions = transactions.filter(date__gte=date_from)
+
+    if date_to:
+        transactions = transactions.filter(date__lte=date_to)
+
     return render(
         request,
         'expenses/transaction_list.html',
-        {'transactions': transactions}
+        {
+            'transactions': transactions,
+            'categories': categories,
+            'selected_category': category_id or '',
+            'selected_type': type_filter or '',
+            'date_from': date_from or '',
+            'date_to': date_to or '',
+        }
     )
 
 

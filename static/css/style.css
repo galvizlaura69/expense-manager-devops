@@ -648,6 +648,40 @@ td strong {
   border-top: 1px solid var(--gray-100);
 }
 
+/* ---------- Filtros de movimientos ---------- */
+.filters-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(16, 185, 129, 0.08);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 180px;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
 /* ---------- Estado vacío ---------- */
 .empty-state {
   text-align: center;
